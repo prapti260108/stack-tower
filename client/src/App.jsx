@@ -104,19 +104,26 @@ export default function App() {
     };
   }, [refreshMongoStatus]);
 
-  // A hidden mobile browser must never allow the simulation to advance without
-  // the player. Surface the existing pause controls when the app is backgrounded.
+  // When app is backgrounded or minimized, immediately pause game and pause BGM.
+  // Resume BGM when app becomes active again if in gameplay.
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState !== 'hidden' || currentScreen !== 'PLAYING') return;
-
-      canvasRef.current?.pauseGame();
-      setShowPause(true);
+      if (document.hidden || document.visibilityState === 'hidden') {
+        audioService.stopBGM(true);
+        if (currentScreen === 'PLAYING') {
+          canvasRef.current?.pauseGame();
+          setShowPause(true);
+        }
+      } else if (!document.hidden && document.visibilityState === 'visible') {
+        if (currentScreen === 'PLAYING' && !showPause && !showGameOver) {
+          audioService.startBGM();
+        }
+      }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, [currentScreen]);
+  }, [currentScreen, showPause, showGameOver]);
 
   // Update Settings
   const handleUpdateSettings = (newSettings) => {
@@ -140,6 +147,7 @@ export default function App() {
     setScore(0);
     setComboStreak(0);
     setCurrentScreen('PLAYING');
+    audioService.startBGM();
 
     analyticsService.track('game_start', { timestamp: Date.now() });
 
@@ -193,6 +201,7 @@ export default function App() {
     });
 
     setShowGameOver(true);
+    audioService.stopBGM();
 
     analyticsService.track('game_end', {
       score: finalStats.score,
@@ -324,6 +333,7 @@ export default function App() {
     if (canvasRef.current) {
       canvasRef.current.pauseGame();
     }
+    audioService.stopBGM(true);
     setShowPause(true);
     analyticsService.track('pause', { score });
   };
@@ -333,6 +343,7 @@ export default function App() {
     if (canvasRef.current) {
       canvasRef.current.resumeGame();
     }
+    audioService.startBGM();
     analyticsService.track('resume', { score });
   };
 

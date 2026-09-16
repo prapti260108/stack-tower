@@ -15,18 +15,18 @@ export default function HomeScreen({
   onToggleMusic
 }) {
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-between p-6 z-20 pointer-events-auto">
-      {/* Top Bar: Settings, Help, Music, Stars Currency & Atlas Indicator */}
-      <div className="w-full max-w-lg flex items-center justify-between pt-2">
-        <div className="flex items-center gap-2">
+    <div className="relative w-full h-full flex flex-col items-center justify-between p-4 sm:p-6 pt-10 sm:pt-6 z-20 pointer-events-auto">
+      {/* Top Bar: Settings, Help, Music, Stars Currency & Status Indicator */}
+      <div className="w-full max-w-lg flex items-center justify-between gap-2 pt-1">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <Button
             variant="glass"
             size="icon"
             onClick={onOpenHowToPlay}
             aria-label="How to play"
-            className="w-10 h-10"
+            className="w-9 h-9 sm:w-10 sm:h-10"
           >
-            <HelpCircle className="w-5 h-5 text-slate-300" />
+            <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-slate-300" />
           </Button>
 
           <Button
@@ -34,9 +34,9 @@ export default function HomeScreen({
             size="icon"
             onClick={onOpenSettings}
             aria-label="Settings"
-            className="w-10 h-10"
+            className="w-9 h-9 sm:w-10 sm:h-10"
           >
-            <Settings className="w-5 h-5 text-slate-300" />
+            <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-slate-300" />
           </Button>
 
           {onToggleMusic && (
@@ -45,21 +45,21 @@ export default function HomeScreen({
               size="icon"
               onClick={onToggleMusic}
               aria-label="Toggle Music"
-              className={`w-10 h-10 transition-colors ${
+              className={`w-9 h-9 sm:w-10 sm:h-10 transition-colors ${
                 musicEnabled ? 'text-cyan-400 border-cyan-500/30' : 'text-slate-500'
               }`}
               title={musicEnabled ? 'Music: ON' : 'Music: OFF'}
             >
-              {musicEnabled ? <Music className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+              {musicEnabled ? <Music className="w-4 h-4 sm:w-5 sm:h-5" /> : <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" />}
             </Button>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Stars Currency Pill */}
           <button
             onClick={onOpenCosmetics}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-amber-400/10 border border-amber-400/25 text-amber-400 hover:bg-amber-400/20 transition-all font-bold text-xs shadow-sm"
+            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-2xl bg-amber-400/10 border border-amber-400/25 text-amber-400 hover:bg-amber-400/20 transition-all font-bold text-xs shadow-sm"
           >
             <Star className="w-3.5 h-3.5 fill-amber-400" />
             <span>{stars}</span>
@@ -68,15 +68,15 @@ export default function HomeScreen({
           {/* Online / Offline Status Badge */}
           <button
             onClick={onOpenSettings}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl border transition-all text-[11px] font-bold shadow-sm ${
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-2xl border transition-all text-[11px] font-bold shadow-sm whitespace-nowrap ${
               mongoStatus?.connected
                 ? 'bg-emerald-950/50 border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/50'
                 : 'bg-amber-950/50 border-amber-500/40 text-amber-300 hover:bg-amber-900/50'
             }`}
             title={mongoStatus?.connected ? 'Online: Synced to MongoDB Atlas' : 'Offline Mode: Device Save Active'}
           >
-            <span className={`w-2 h-2 rounded-full ${mongoStatus?.connected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
-            <span>{mongoStatus?.connected ? 'ONLINE (Atlas)' : 'OFFLINE (Device Save)'}</span>
+            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${mongoStatus?.connected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
+            <span>{mongoStatus?.connected ? 'Online' : 'Offline'}</span>
           </button>
         </div>
       </div>

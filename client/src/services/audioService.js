@@ -30,6 +30,27 @@ class AudioService {
       880.00, // A5
       1046.50 // C6
     ];
+
+    this.isGameplayActive = false;
+    this.setupLifecycleListeners();
+  }
+
+  setupLifecycleListeners() {
+    if (typeof document === 'undefined') return;
+
+    // Immediately stop audio when app is minimized, screen locked, or switched to another app
+    const handleHidden = () => {
+      if (document.hidden) {
+        this.stopBGM();
+        if (this.ctx && this.ctx.state === 'running') {
+          this.ctx.suspend().catch(() => {});
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleHidden);
+    window.addEventListener('pagehide', handleHidden);
+    window.addEventListener('beforeunload', () => this.stopBGM());
   }
 
   // Safe AudioContext initializer on user gesture
@@ -55,7 +76,7 @@ class AudioService {
     this.settings = { ...this.settings, ...settings };
     if (!this.settings.music) {
       this.stopBGM();
-    } else {
+    } else if (this.isGameplayActive) {
       this.startBGM();
     }
   }
@@ -222,6 +243,7 @@ class AudioService {
 
   // Ambient Procedural Synthesizer Background Music (Lo-fi Arpeggiated Pad)
   startBGM() {
+    this.isGameplayActive = true;
     if (!this.settings.music) return;
     this.init();
     if (!this.ctx || this.bgmInterval) return;
@@ -268,7 +290,10 @@ class AudioService {
     }, 420);
   }
 
-  stopBGM() {
+  stopBGM(preserveIntent = false) {
+    if (!preserveIntent) {
+      this.isGameplayActive = false;
+    }
     if (this.bgmInterval) {
       clearInterval(this.bgmInterval);
       this.bgmInterval = null;

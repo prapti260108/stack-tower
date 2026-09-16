@@ -3,6 +3,14 @@
  * Connects to the Express backend with non-blocking graceful offline fallback.
  */
 
+const isNativeOrMobileWithoutRemoteUrl = () => {
+  if (import.meta.env.VITE_API_URL) return false;
+  if (typeof window === 'undefined') return false;
+  const isCapacitor = Boolean(window.Capacitor) || window.location.protocol === 'capacitor:' || window.location.protocol === 'ionic:';
+  const isMobileLocal = window.location.hostname === 'localhost' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  return isCapacitor || isMobileLocal;
+};
+
 const getApiBase = () => {
   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
   const host = typeof window !== 'undefined' && window.location.hostname ? window.location.hostname : 'localhost';
@@ -22,6 +30,17 @@ class ApiService {
         success: false,
         offline: true,
         error: 'Device is offline'
+      };
+    }
+
+    // On mobile/Capacitor builds without a dedicated remote server, fail immediately
+    // to avoid a 2.5s TCP timeout hanging the WebView thread.
+    if (isNativeOrMobileWithoutRemoteUrl()) {
+      this.isOnline = false;
+      return {
+        success: false,
+        offline: true,
+        error: 'Device save mode active'
       };
     }
 

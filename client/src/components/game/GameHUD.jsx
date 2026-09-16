@@ -27,7 +27,7 @@ export default function GameHUD({
   return (
     <div className="absolute inset-0 pointer-events-none flex flex-col justify-between z-20 overflow-hidden">
       {/* Top HUD Bar - Centered Responsive Max-Width Container */}
-      <div className="w-full max-w-lg mx-auto px-5 pt-4 sm:pt-6 flex items-start justify-between">
+      <div className="w-full max-w-lg mx-auto px-5 pt-8 sm:pt-6 flex items-start justify-between">
         {/* Left: Best Score Pill */}
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-amber-400/25 shadow-lg shadow-amber-500/5">
           <Trophy className="w-3.5 h-3.5 text-amber-400" />
