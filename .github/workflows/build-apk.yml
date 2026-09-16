@@ -3,8 +3,6 @@ name: Build Android APK
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
@@ -22,9 +20,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 📱 Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: 🟢 Setup Node.js 20
         uses: actions/setup-node@v4
         with:
@@ -33,7 +28,7 @@ jobs:
       - name: 📦 Install Client Dependencies
         run: |
           cd client
-          npm install --legacy-peer-deps
+          npm install
 
       - name: 🔨 Build Vite Web Application
         run: |
@@ -45,16 +40,11 @@ jobs:
           cd client
           npx cap sync android
 
-      - name: 🔑 Grant Execute Permission & Configure SDK
-        run: |
-          cd client/android
-          chmod +x gradlew
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
-
       - name: 🤖 Build Android APK with Gradle
         run: |
           cd client/android
-          ./gradlew assembleDebug --stacktrace --no-daemon
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
 
       - name: 📤 Upload APK Artifact (Downloadable)
         uses: actions/upload-artifact@v4
