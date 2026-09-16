@@ -78,15 +78,15 @@ jobs:
           cd client
           npm run build
 
-      - name: 🔄 Sync Capacitor iOS Platform
+      - name: 🔄 Copy Web Assets to iOS
         run: |
           cd client
-          npx cap sync ios
+          npx cap copy ios
 
       - name: 🍎 Build iOS App Package
         run: |
           cd client/ios/App
-          pod install
+          pod install --repo-update
           xcodebuild -workspace App.xcworkspace \
             -scheme App \
             -configuration Debug \
