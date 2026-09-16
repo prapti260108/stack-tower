@@ -1,0 +1,19 @@
+{
+  "name": "stack-tower",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Full-stack Stack Tower game with HTML5 Canvas, React, Node.js, Express, and MongoDB Atlas",
+  "scripts": {
+    "dev": "npm --prefix client run dev",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build": "npm --prefix client run build",
+    "build:client": "npm --prefix client run build",
+    "build:mobile": "npm --prefix client run build:mobile",
+    "test": "npm --prefix client test",
+    "test:client": "npm --prefix client test"
+  },
+  "keywords": ["game", "stack-tower", "react", "canvas", "express", "mongodb"],
+  "author": "",
+  "license": "MIT"
+}

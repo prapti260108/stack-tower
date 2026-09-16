@@ -1,0 +1,15 @@
+{
+  "appId": "com.stacktower.arcade",
+  "appName": "Stack Tower",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#020617",
+    "allowMixedContent": true
+  },
+  "ios": {
+    "backgroundColor": "#020617"
+  }
+}
