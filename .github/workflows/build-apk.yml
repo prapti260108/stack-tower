@@ -90,23 +90,19 @@ jobs:
           xcodebuild -workspace App.xcworkspace \
             -scheme App \
             -configuration Debug \
-            -destination 'generic/platform=iOS' \
+            -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build \
             CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
             build
 
-          mkdir -p build/Payload
-          cp -r build/Build/Products/Debug-iphoneos/App.app build/Payload/
-          cd build
-          zip -r StackTower-iOS.ipa Payload
+          cd build/Build/Products/Debug-iphonesimulator
+          zip -r ../../../StackTower-iOS-App.zip App.app
 
-      - name: 📤 Upload iOS IPA Artifact
+      - name: 📤 Upload iOS App Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: StackTower-iOS-IPA
-          path: client/ios/App/build/StackTower-iOS.ipa
+          name: StackTower-iOS-App
+          path: client/ios/App/StackTower-iOS-App.zip
           if-no-files-found: warn
           retention-days: 30
 
